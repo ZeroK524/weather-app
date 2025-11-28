@@ -57,7 +57,7 @@ git clone https://github.com/ZeroK524/weather-app.git
 ```bash
 cd weather-app
 ```
-3. Mở file script.js, nhap API_KEY bằng OpenWeatherMap API Key của bạn(nếu có):
+3. Mở file scripts/script.js, nhap API_KEY bằng OpenWeatherMap API Key của bạn(nếu có):
 ```bash
 const API_KEY = "XXXXX";
 ```
