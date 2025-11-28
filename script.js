@@ -319,8 +319,8 @@ const renderForecastGrid = (dailyForecasts) => {
 
 const renderExtendedDetails = (dayData, isToday) => {
     document.getElementById('extended-details-title').textContent = isToday
-        ? `Chi Tiết Thời Tiết Hôm Nay (${dayData.date.slice(5).replace('-', '/')})`
-        : `Chi Tiết Thời Tiết Ngày ${dayData.dayName} (${dayData.date.slice(5).replace('-', '/')})`;
+        ? `Chi Tiết Thời Tiết Hôm Nay (${dayData.date.substring(8, 10)}/${dayData.date.substring(5, 7).replace('-', '/')})`
+        : `Chi Tiết Thời Tiết Ngày ${dayData.dayName} (${dayData.date.substring(8, 10)}/${dayData.date.substring(5, 7).replace('-', '/')})`;
 
     document.getElementById('max-temp-detail').textContent = `${dayData.maxTemp}°C`;
     document.getElementById('min-temp-detail').textContent = `${dayData.minTemp}°C`;
