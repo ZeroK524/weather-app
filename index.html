@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Thời Tiết</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Load Tailwind CSS CDN for modern styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons for aesthetic UI elements -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+</head>
+
+<body class="overflow-x-hidden flex flex-col min-h-screen">
+    <!-- ==================================== HEADER CỐ ĐỊNH ==================================== -->
+    <header class="fixed top-0 left-0 w-full h-20 shadow-lg z-50 
+               bg-blue-600 dark:bg-gray-900 transition-colors duration-300">
+
+        <div class="max-w-7xl mx-auto h-full flex justify-between items-center px-4 md:px-8">
+
+            <a href="index.html" class="flex items-center space-x-2 text-2xl font-extrabold text-white dark:text-blue-400">
+                <i data-lucide="cloud-sun" class="w-7 h-7"></i>
+                <span>WeatherNow</span>
+            </a>
+
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-white dark:text-gray-300">
+                <a href="index.html" class="hover:text-white dark:hover:text-blue-400 transition-colors">Trang Chủ</a>
+                <a href="#" class="hover:text-white dark:hover:text-blue-400 transition-colors">Dự Báo</a>
+                <a href="#" class="hover:text-white dark:hover:text-blue-400 transition-colors">Về Chúng Tôi</a>
+                <a href="#" class="hover:text-white dark:hover:text-blue-400 transition-colors">Liên Hệ</a>
+            </nav>
+
+            <div class="flex items-center space-x-3 text-white dark:text-gray-300">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-white/10 dark:hover:bg-white/10 transition">
+                    <i data-lucide="sun" id="theme-icon" class="w-6 h-6"></i>
+                </button>
+                <button id="menu-button"
+                    class="md:hidden p-2 rounded-full hover:bg-white/10 dark:hover:bg-white/10 transition">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <nav id="mobile-menu-dropdown" class="hidden md:hidden absolute top-20 left-0 right-0 w-full z-40 flex-col 
+     bg-blue-600 dark:bg-gray-900 p-4 space-y-3 shadow-lg">
+        <a href="index.html"
+            class="block text-white dark:text-gray-300 hover:text-white dark:hover:text-blue-400 transition-colors">Trang
+            Chủ</a>
+        <a href="#"
+            class="block text-white dark:text-gray-300 hover:text-white dark:hover:text-blue-400 transition-colors">Dự
+            Báo</a>
+        <a href="#"
+            class="block text-white dark:text-gray-300 hover:text-white dark:hover:text-blue-400 transition-colors">Về
+            Chúng Tôi</a>
+        <a href="#"
+            class="block text-white dark:text-gray-300 hover:text-white dark:hover:text-blue-400 transition-colors">Liên
+            Hệ</a>
+    </nav>
+    <!-- ==================================== KẾT THÚC HEADER ==================================== -->
+
+    <!-- Container Chính -->
+    <div id="weather-app" class="weather-app-container flex flex-col md:flex-row md:flex-nowrap gap-6 max-w-7xl mx-auto 
+           pt-24 pb-1">
+
+        <!-- -------------------- CỘT TRÁI (1/3) -------------------- -->
+        <div class="left-col w-full md:w-1/3 space-y-6">
+
+            <!-- Header & Search -->
+            <header class="card p-4">
+
+
+                <!-- Input và Nút Tìm Kiếm -->
+                <div class="relative">
+                    <div class="flex space-x-2">
+                        <input type="text" id="city-input" placeholder="Nhập tên thành phố..." class="flex-grow p-2 border border-gray-300 rounded-lg shadow-inner 
+                          bg-white text-gray-900 
+                          dark:bg-gray-700 dark:text-white 
+                          focus:border-indigo-500 transition duration-200" autocomplete="off">
+
+                        <button id="search-button"
+                            class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Lịch Sử Tìm Kiếm (Sổ xuống) -->
+                    <ul id="history-list-dropdown"
+                        class="absolute z-10 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 mt-1 rounded-lg shadow-lg max-h-40 overflow-y-auto hidden">
+                        <!-- History items will be inserted here by JS -->
+                    </ul>
+                </div>
+            </header>
+
+            <!-- Loading & Error State Message -->
+            <div id="status-message" class="card p-6 text-center text-lg hidden">
+                <div id="loading-spinner" class="spinner mx-auto hidden"></div>
+                <p id="message-text" class="mt-2 font-medium"></p>
+            </div>
+
+            <!-- Thời Tiết Chi Tiết Trong Ngày (Current Day) -->
+            <section id="current-details-card" class="card p-6 hidden">
+                <h2 id="current-city-name" class="text-3xl font-semibold mb-4 text-center">--</h2>
+
+                <!-- Main Info -->
+                <div class="flex flex-col items-center mb-6">
+                    <p class="text-6xl font-extrabold" id="current-temp">--°C</p>
+                    <p class="text-xl font-medium mt-1" id="current-condition">--</p>
+                    <img id="current-icon" class="w-20 h-20" src=""
+                        onerror="this.src='https://placehold.co/80x80/9ca3af/ffffff?text=Icon'" alt="Weather Icon">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2" id="current-date-time">--</p>
+                </div>
+
+                <!-- Detailed Parameters -->
+                <h3 class="text-lg font-semibold border-b pb-2 mb-3 dark:border-gray-600">Thông Số Chi Tiết</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center"><i data-lucide="droplet" class="w-4 h-4 mr-2 text-blue-500"></i>
+                            Độ Ẩm:</span>
+                        <span id="humidity-value" class="font-medium">--</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center"><i data-lucide="wind" class="w-4 h-4 mr-2 text-green-500"></i>
+                            Tốc Độ Gió:</span>
+                        <span id="wind-speed-value" class="font-medium">--</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center"><i data-lucide="gauge" class="w-4 h-4 mr-2 text-yellow-600"></i>
+                            Áp Suất:</span>
+                        <span id="pressure-value" class="font-medium">--</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center"><i data-lucide="eye" class="w-4 h-4 mr-2 text-indigo-500"></i>
+                            Tầm Nhìn:</span>
+                        <span id="visibility-value" class="font-medium">--</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- -------------------- CỘT PHẢI (2/3) -------------------- -->
+        <div class="right-col w-full md:w-2/3 space-y-6">
+
+            <!-- Dự Báo 3-5 Ngày (Grid/Lưới) -->
+            <section class="card p-4">
+                <h2 class="text-xl font-bold mb-4">Dự Báo Tuần Tới (5 Ngày)</h2>
+                <div id="forecast-grid"
+                    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 min-h-[150px] items-center justify-center">
+                    <p id="forecast-placeholder" class="text-center text-gray-500 dark:text-gray-400 p-4 col-span-5">
+                        Nhập tên thành phố để xem dự báo.</p>
+                </div>
+            </section>
+
+            <!-- Chi Tiết Mở Rộng Của Ngày Được Chọn -->
+            <section id="extended-details-card" class="card p-6 hidden">
+                <h2 class="text-xl font-bold mb-4" id="extended-details-title">Chi Tiết Thời Tiết Mở Rộng</h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 text-gray-900 rounded-lg">
+                        <p class="font-medium">Nhiệt độ cao nhất:</p>
+                        <p class="text-2xl font-bold text-red-600" id="max-temp-detail">--</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 text-gray-900 rounded-lg">
+                        <p class="font-medium">Nhiệt độ thấp nhất:</p>
+                        <p class="text-2xl font-bold text-blue-600" id="min-temp-detail">--</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 text-gray-900 rounded-lg">
+                        <p class="font-medium">Chỉ số UV (Ước tính):</p>
+                        <p class="text-2xl font-bold" id="uv-detail">--</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 text-gray-900 rounded-lg">
+                        <p class="font-medium">Bình minh:</p>
+                        <p class="text-2xl font-bold" id="sunrise-detail">--</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 text-gray-900 rounded-lg">
+                        <p class="font-medium">Hoàng hôn:</p>
+                        <p class="text-2xl font-bold" id="sunset-detail">--</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 text-gray-900 rounded-lg">
+                        <p class="font-medium">Khả năng mưa (POP):</p>
+                        <p class="text-2xl font-bold" id="pop-detail">--</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    <!-- ==================================== FOOTER CỐ ĐỊNH ==================================== -->
+    <footer class="bg-gray-600 dark:bg-gray-900 text-white text-sm shadow-inner transition-colors duration-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 md:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Info -->
+            <div class="text-center md:text-left space-y-1">
+                <h3 class="font-semibold mb-2">Info</h3>
+                <p>&copy; 2024 WeatherNow</p>
+                <p>Dữ liệu từ OpenWeatherMap</p>
+                <p>Thiết kế với Tailwind CSS & Lucide Icons</p>
+            </div>
+
+            <!-- Contact Us -->
+            <div class="text-center md:text-left space-y-1">
+                <h3 class="font-semibold mb-2">Contact Us</h3>
+                <p><strong>Tác giả:</strong> ZeroK524</p>
+                <p><strong>Email:</strong> 
+                    <a href="mailto:tmnham03@gmail.com" class="underline hover:text-blue-400">
+                        tmnham03@gmail.com
+                    </a>
+                </p>
+                <p><strong>Địa chỉ:</strong> Nha Trang, Khánh Hòa</p>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="text-center md:text-left space-y-1">
+                <h3 class="font-semibold mb-2">Follow Us</h3>
+                <div class="flex justify-center md:justify-start gap-4">
+                    <a href="https://github.com/ZeroK524" target="_blank" class="hover:text-gray-300 transition">
+                        <i data-lucide="github" class="w-6 h-6"></i>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" class="hover:text-blue-500 transition">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </a>
+                    <a href="https://zalo.me" target="_blank" class="hover:text-blue-400 transition">
+                        <i data-lucide="message-circle" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+
+
+    <!-- ==================================== KẾT THÚC FOOTER ==================================== -->
+
+    <script src="script.js"></script>
+</body>
+
+</html>
