@@ -62,3 +62,9 @@ cd weather-app
 const API_KEY = "XXXXX";
 ```
 4. Mở index.html trên trình duyệt
+5. Images:
+![Giao diện Web Thời Tiết](./images/1.png)
+![Giao diện Web Thời Tiết](./images/2.png)
+![Giao diện Web Thời Tiết](./images/3.png)
+![Dark mode: Giao diện Web Thời Tiết](./images/4.png)
+![Giao diện Web Thời Tiết](./images/5.png)
