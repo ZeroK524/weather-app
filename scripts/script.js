@@ -1,11 +1,7 @@
-// Khởi tạo Lucide icons
-lucide.createIcons();
-// ====================================================================
 // KHÓA API
 const API_KEY = '5174a4c980abc22f0dc589db984742cf';
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const LANG = 'vi'; // Ngôn ngữ tiếng Việt
-// ====================================================================
 
 // --- DOM Elements ---
 const cityInput = document.getElementById('city-input');
